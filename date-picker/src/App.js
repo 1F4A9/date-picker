@@ -115,9 +115,10 @@ class App extends React.Component {
     this.state = {
       showDatePicker: false,
     };
+    this.onClick = this.onClick.bind(this)
   }
 
-  onClick = () => {
+  onClick() {
     const datePicker = this.state.showDatePicker;
 
     if (datePicker === false) {

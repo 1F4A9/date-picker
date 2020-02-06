@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
+import moment from 'moment';
 
 const Container = styled.div`
   font-family: 'Heebo', sans-serif;
@@ -86,21 +87,26 @@ const Container = styled.div`
 
   main .days-of-the-week {
     display: flex;
-    justify-content: space-around;
     font-size: 14px;
     color: #666666;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
+  }
+
+  main .days-of-the-week > div {
+    width: 50px;
+    text-align: center;
   }
 
   main .days {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
   }
 
   main .days .day {
+    width: 50px;
     margin: 12px 0px;
     cursor: pointer;
+    text-align: center;
   }
 
   /* ----------------------- FOOTER ----------------------- */
@@ -137,16 +143,31 @@ const Container = styled.div`
 class DatePicker extends React.Component {
   constructor(props) {
     super(props)
+  }
 
-    this.state = {
-      daysOfTheWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
-      daysInMonth: Array.from(Array(7).keys()),
-    };
+  componentDidMount() {
+
+  }
+
+  getTodaysDate() {
+    return moment().format("ddd, MMM D")
+  }
+
+  getDaysInMonth() {
+    let currentMonth = moment().month() + 1;
+    let currentYear = moment().year();
+
+    let daysInCurrentMonth = moment(`${currentYear}-${currentMonth}`, "YYYY-MM").daysInMonth();
+
+    let firstDayOfWeek = moment(`${currentYear}-${currentMonth}`).day();
+
+    let dummy = Array(firstDayOfWeek);
+
+    return [...dummy, ...Array.from(Array(daysInCurrentMonth).keys()).map(x => x + 1)];
   }
 
   render() {
-    let d = new Date().getUTCDate();
-    console.log(d)
+    const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
     return ReactDOM.createPortal (
       <Container>
@@ -155,24 +176,20 @@ class DatePicker extends React.Component {
             <p>select date</p>
           </div>
           <div className="header-bottom">
-            <h1>Mon, Nov 17</h1>
+            <h1>{this.getTodaysDate()}</h1>
           </div>
         </header>
         <main>
           <div className="year">
             <p>November 2018</p>
-            <i class="material-icons down-arrow">arrow_drop_down</i>
-            <i class="material-icons left-arrow">keyboard_arrow_left</i>
-            <i class="material-icons right-arrow">keyboard_arrow_right</i>
+            <i className="material-icons down-arrow">arrow_drop_down</i>
+            <i className="material-icons left-arrow">keyboard_arrow_left</i>
+            <i className="material-icons right-arrow">keyboard_arrow_right</i>
           </div>
           <div className="days-of-the-week">
-            {this.state.daysOfTheWeek.map(weekday => <div>{weekday}</div>)}
+            {daysOfTheWeek.map(weekday => <div>{weekday}</div>)}
           </div>
-          <div className="days">{this.state.daysInMonth.map(day => <div className="day">{day}</div>)}</div>
-          <div className="days">{this.state.daysInMonth.map(day => <div className="day">{day}</div>)}</div>
-          <div className="days">{this.state.daysInMonth.map(day => <div className="day">{day}</div>)}</div>
-          <div className="days">{this.state.daysInMonth.map(day => <div className="day">{day}</div>)}</div>
-          <div className="days">{this.state.daysInMonth.map(day => <div className="day">{day}</div>)}</div>
+          <div className="days">{this.getDaysInMonth().map(day => <div className="day">{day}</div>)}</div>
         </main>
         <footer>
           <div className="buttons">
