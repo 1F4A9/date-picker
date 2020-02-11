@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 
+import DaysContainer from './DaysContainer';
+
 const Container = styled.div`
   font-family: 'Heebo', sans-serif;
   font-weight: 500;
@@ -102,13 +104,6 @@ const Container = styled.div`
     flex-wrap: wrap;
   }
 
-  main .days .day {
-    width: 50px;
-    margin: 12px 0px;
-    cursor: pointer;
-    text-align: center;
-  }
-
   /* ----------------------- FOOTER ----------------------- */
 
   footer {
@@ -141,29 +136,9 @@ const Container = styled.div`
 `;
 
 class DatePicker extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
-  componentDidMount() {
-
-  }
 
   getTodaysDate() {
     return moment().format("ddd, MMM D")
-  }
-
-  getDaysInMonth() {
-    let currentMonth = moment().month() + 1;
-    let currentYear = moment().year();
-
-    let daysInCurrentMonth = moment(`${currentYear}-${currentMonth}`, "YYYY-MM").daysInMonth();
-
-    let firstDayOfWeek = moment(`${currentYear}-${currentMonth}`).day();
-
-    let dummy = Array(firstDayOfWeek);
-
-    return [...dummy, ...Array.from(Array(daysInCurrentMonth).keys()).map(x => x + 1)];
   }
 
   render() {
@@ -187,9 +162,11 @@ class DatePicker extends React.Component {
             <i className="material-icons right-arrow">keyboard_arrow_right</i>
           </div>
           <div className="days-of-the-week">
-            {daysOfTheWeek.map(weekday => <div>{weekday}</div>)}
+            {daysOfTheWeek.map((weekday, i) => <div key={i}>{weekday}</div>)}
           </div>
-          <div className="days">{this.getDaysInMonth().map(day => <div className="day">{day}</div>)}</div>
+          <DaysContainer handleDaysOfCurrentMonth={this.handleDaysOfCurrentMonth}>
+
+          </DaysContainer>
         </main>
         <footer>
           <div className="buttons">
